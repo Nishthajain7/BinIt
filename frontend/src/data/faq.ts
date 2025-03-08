@@ -3,23 +3,19 @@ import { siteDetails } from "./siteDetails";
 
 export const faqs: IFAQ[] = [
     {
-        question: `Is ${siteDetails.siteName} secure?`,
-        answer: 'Absolutely. We use bank-level encryption to protect your data and never store your login information. Plus, our biometric authentication adds an extra layer of security.',
+        question: `What is Binit?`,
+        answer: 'Binit is a community-driven platform that helps users report garbage with photos and locations. Cleanup teams then take action and upload images of the cleaned area, ensuring accountability and a cleaner environment.',
     },
     {
-        question: `Can I use ${siteDetails.siteName} on multiple devices?`,
-        answer: 'Absolutely! Your Finwise account syncs seamlessly across all your devices - smartphone, tablet, and computer.',
+        question: 'How can institutions participate?',
+        answer: 'We encourage schools, colleges, and organizations to participate by hosting cleanliness competitions. These initiatives drive awareness and collective action for a cleaner society.'
     },
     {
-        question: 'Can I connect all my bank accounts?',
-        answer: `Yes! ${siteDetails.siteName} supports connections with over 10,000 financial institutions worldwide. Simply log in through our secure portal to link your accounts.`
+        question: 'How do I become a cleaner or volunteer?',
+        answer: 'If you want to be part of the cleanup teams, you can register through the platform. We also work with local municipalities and NGOs to facilitate cleanup drives.',
     },
     {
-        question: 'Do I need any financial expertise to use the investing features?',
-        answer: 'Not at all! Our expert-curated portfolios and educational resources make investing accessible to everyone, regardless of experience level.',
-    },
-    {
-        question: 'What if I need help using the app?',
-        answer: 'Our dedicated support team is available 24/7 via chat or email. Plus, we offer extensive in-app tutorials and a comprehensive knowledge base to help you make the most of Finwise.'
+        question: 'Is this website free to use?',
+        answer: 'Yes! All the features of this website are free to use by all users.'
     }
 ];

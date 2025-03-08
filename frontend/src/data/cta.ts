@@ -1,6 +1,6 @@
 export const ctaDetails = {
-    heading: 'Join Over 1 Million Users To Transform Your Finances',
-    subheading: 'Your journey to financial freedom starts here. Download Finwise today and take the first step towards a brighter financial future!',
+    heading: 'Join a Movement for a Cleaner Tomorrow!',
+    subheading: 'Be part of the change! Report, clean, and inspire action with Binit. Start making a difference today—because a cleaner world begins with you!',
     appStoreUrl: '#',
     googlePlayUrl: '#'
 }
