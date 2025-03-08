@@ -1,11 +1,11 @@
 "use client";
+
 import { useEffect, useState, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import 'leaflet.markercluster/dist/leaflet.markercluster.js';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
-import axios from 'axios';
 import Popup from '../../../components/popup';
 import { db } from "../../firebase"; // Adjust the path
 import { doc, updateDoc, arrayUnion, GeoPoint, setDoc, getDoc } from "firebase/firestore";
@@ -13,7 +13,7 @@ import { doc, updateDoc, arrayUnion, GeoPoint, setDoc, getDoc } from "firebase/f
 const MapComponent = ({ params }) => {
     const [place, setPlace] = useState(params.id !== "current" ? params.id : "");
     const [searchTimeout, setSearchTimeout] = useState(null);
-    const [markers, setMarkers] = useState([]);
+    const [marker, setMarker] = useState(null);
     const [selectedMarker, setSelectedMarker] = useState(null);
     const [popupOpen, setPopupOpen] = useState(false);
     const mapRef = useRef(null);
@@ -70,6 +70,7 @@ const MapComponent = ({ params }) => {
     }
 
     function addMarker(e) {
+        const latlng = e.latlng; // Ensure latlng is properly defined
         const customIcon = L.divIcon({
             className: "custom-marker",
             html: `<div class="bg-red-500 text-white font-bold text-xs flex items-center justify-center w-8 h-8 rounded-full shadow-lg border-2 border-white">📍</div>`,
@@ -78,15 +79,17 @@ const MapComponent = ({ params }) => {
             popupAnchor: [0, -32]
         });
 
-        const newMarker = L.marker(e.latlng, { icon: customIcon }).addTo(mapRef.current);
+        const newMarker = L.marker(latlng, { icon: customIcon }).addTo(mapRef.current);
         newMarker.on('click', () => {
-            setSelectedMarker(e.latlng);
+            setSelectedMarker(latlng);
             setPopupOpen(true);
+            setMarker(latlng); // Fixed the setMarker call
         });
-        storedata(e.latlng);
         markersRef.current.push(newMarker);
-        setMarkers([...markersRef.current]);
-        markerClusterGroup.current.addLayer(newMarker);
+
+        if (markerClusterGroup.current) {
+            markerClusterGroup.current.addLayer(newMarker);
+        }
     }
 
     function storedata(latlng) {
@@ -147,8 +150,6 @@ const MapComponent = ({ params }) => {
                 const marker = L.marker([lat, lng], { icon: customIcon }).addTo(mapRef.current);
                 markersRef.current.push(marker);
             });
-
-            setMarkers([...markersRef.current]);
         }
     }
 
@@ -201,24 +202,9 @@ const MapComponent = ({ params }) => {
             const data = await response.json();
 
             if (data.length > 0) {
-                const { lat, lon, display_name } = data[0];
-
+                const { lat, lon } = data[0];
                 mapRef.current.setView([lat, lon], 10);
-
-                markersRef.current.forEach(marker => mapRef.current.removeLayer(marker));
-                markersRef.current = [];
-
-                const newMarker = L.marker([lat, lon])
-                    .addTo(mapRef.current)
-                    .bindPopup(display_name)
-                    .openPopup();
-
-                markersRef.current.push(newMarker);
-                setMarkers([...markersRef.current]);
-                
-                if (markerClusterGroup.current) {
-                    markerClusterGroup.current.addLayer(newMarker);
-                }
+                addMarker({ lat, lng: lon });
             } else {
                 alert("Location not found!");
             }
@@ -254,7 +240,17 @@ const MapComponent = ({ params }) => {
             )}
             <div ref={mapContainerRef} className="w-full h-full" id="map"></div>
 
-            {popupOpen && <Popup onClose={() => setPopupOpen(false)} />}
+            {popupOpen && (
+                <Popup
+                    onClose={() => setPopupOpen(false)}
+                    onsubmit={() => {
+                        if (marker) {
+                            storedata(marker);
+                            setPopupOpen(false);
+                        }
+                    }}
+                />
+            )}
         </div>
     );
 };

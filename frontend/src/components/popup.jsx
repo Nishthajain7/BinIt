@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { IoMdClose } from "react-icons/io";
 
 
-function Popup({ onClose }) {
+function Popup({ onClose , onsubmit }) {
   const [selectedColor, setSelectedColor] = useState(null);
   const [file, setFile] = useState(null);
 
@@ -16,6 +16,12 @@ function Popup({ onClose }) {
     setFile(null);
     document.getElementById('fileUpload').value = ''; // Reset input field
   };
+
+  function submit(event) {
+    event.preventDefault();
+    onsubmit();
+  }
+  
 
   return (
     <div className="fixed inset-0 flex items-center justify-end bg-transparent bg-opacity-10 backdrop-blur-lg z-1000">
@@ -53,7 +59,7 @@ function Popup({ onClose }) {
           ))}
         </div>
 
-        <form className="w-full mt-6 space-y-4">
+        <form className="w-full mt-6 space-y-4" onSubmit={submit}>
         <label className="text-green-700 text-bold font-bold ">Description</label>
             <textarea
             placeholder="Give a description"
