@@ -1,15 +1,29 @@
 'use client';
 import Link from 'next/link';
-import React, { useState } from 'react';
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import React, { useEffect, useState } from 'react';
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import Header from '@/components/Header';
+import {useRouter} from 'next/navigation';
 
 const AuthenticationPage: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setmessage] = useState("");
+    const router = useRouter();
+    useEffect(() => {
+        // Check if user is already logged in
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Redirect to a different page if user is logged in
+                console.log("User is already logged in:", user);
+                router.push('/dashboard');
+            }
+        });
 
+        // Cleanup listener on component unmount
+        return () => unsubscribe();
+    }, [])
     // Handle login with email and password
     const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault();

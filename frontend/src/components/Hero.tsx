@@ -48,9 +48,9 @@ const Hero: React.FC = () => {
       {/* Background image */}
       <div className="absolute left-0 top-0 bottom-0 -z-10 w-full">
         <Image
-          src="/images/map.webp"
+          src="/images/map.png"
           alt="Background map"
-          className="absolute h-full w-full object-cover opacity-55"
+          className="absolute h-full w-full object-cover opacity-10"
           fill
           priority={true}
         />

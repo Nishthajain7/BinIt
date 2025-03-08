@@ -7,6 +7,8 @@ import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import axios from 'axios';
 import Popup from '../../components/popup';
+import { db } from "../firebase"; // Adjust the path
+import { doc, updateDoc, arrayUnion, GeoPoint, setDoc, getDoc } from "firebase/firestore";
 
 const MapComponent = () => {
     const [place, setPlace] = useState("Tokyo"); // Default location
@@ -20,14 +22,77 @@ const MapComponent = () => {
     const userMarkerRef = useRef(null);
     const [markerClusterGroup, setMarkerClusterGroup] = useState(null);
 
+
+
+    function storedata(latlng) {
+        const markerRef = doc(db, "Markers", "all");
+        updateDoc(markerRef, {
+            all: arrayUnion(new GeoPoint(latlng.lat, latlng.lng))
+        }).catch(async (error) => {
+            if (error.code === "not-found") {
+                await setDoc(markerRef, {
+                    all: [new GeoPoint(latlng.lat, latlng.lng)]
+                });
+            } else {
+                console.error("Error storing data:", error);
+            }
+        });
+    }
+
+    async function getdata() {
+        const markerRef = doc(db, "Markers", "all");
+        try {
+            // Fetch the document
+            const docSnap = await getDoc(markerRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                console.log("Document data:", data);
+                if (data.all) {
+                    const allMarkers = data.all;
+                    return allMarkers;
+                } else {
+                    console.log("'all' array not found in the document!");
+                    return [];
+                }
+            } else {
+                console.log("No such document exists in Firestore!");
+                return [];
+            }
+        } catch (error) {
+            console.error("Error fetching document:", error);
+            return [];
+        }
+    }
+    
+
     useEffect(() => {
         if (typeof window === 'undefined') return; // Ensure code runs on client side
 
+        async function loadMarkers() {
+            // Fetch GeoPoints from Firestore
+            const geoPoints = await getdata();
+    
+            if (geoPoints && mapRef.current) {
+                // Add each GeoPoint as a marker on the map
+                geoPoints.forEach((geoPoint) => {
+                    const lat = geoPoint.latitude;
+                    const lng = geoPoint.longitude;
+    
+                    const marker = L.marker([lat, lng]).addTo(mapRef.current);
+                    markersRef.current.push(marker);
+                });
+    
+                setMarkers([...markersRef.current]);
+            }
+        }
+    
         if (!mapRef.current && mapContainerRef.current) {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition, handleError);
+                loadMarkers(); 
             } else {
                 initMap(20.5937, 78.9629);
+                loadMarkers();
             }
         }
     }, []);
@@ -67,9 +132,9 @@ const MapComponent = () => {
 
         function addMarker(e) {
             const newMarker = L.marker(e.latlng, { icon: customIcon }).addTo(mapRef.current);
-
             newMarker.on('click', () => {
                 setSelectedMarker(e.latlng);
+                storedata(e.latlng);
                 setPopupOpen(true);
             });
 
