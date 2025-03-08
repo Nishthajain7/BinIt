@@ -222,3 +222,7 @@ h1, h2, h3, h4, h5, h6 {
   animation-duration: 15s;
   animation-delay: -5s;
 }
+
+#map {
+	z-index: 0;
+}
