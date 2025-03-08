@@ -10,27 +10,27 @@ The official template repository for Define 3.0
  Cover Image  If applicable
 
 ### Team Information
-- **Team Name**: <Team Name> 
-- **Track**: < Track >
+- **Team Name**: Eureka 
+- **Track**: Sustainability (Open Track)
 
 ### Team Members
 | Name | Role | GitHub | LinkedIn |
 |------|------|--------|----------|
-| [Full Name] | [Role] | [@username](https://github.com/username) | [Profile](https://linkedin.com/in/username) |
-| [Full Name] | [Role] | [@username](https://github.com/username) | [Profile](https://linkedin.com/in/username) |
-| [Full Name] | [Role] | [@username](https://github.com/username) | [Profile](https://linkedin.com/in/username) |
-| [Full Name] | [Role] | [@username](https://github.com/username) | [Profile](https://linkedin.com/in/username) |
+| Nishtha Jain | [Role] | [@username](https://github.com/NishthaJain7) | [Profile](https://www.linkedin.com/in/nishtha-jain-44b6b32a1) |
+| Rohith Pradeep | [Role] | [@username](https://github.com/pinjinx) | [Profile](https://www.linkedin.com/in/aadarsh-mahesh-k-7954682aa) |
+| Aadarsh Mahesh | [Role] | [@username](https://github.com/AadarshM07) | [Profile](https://linkedin.com/in/username) |
+| Nandu Krishna | [Role] | [@username](https://github.com/Iron-56) | [Profile](https://www.linkedin.com/in/nandu-krishna-8b1ab2334) |
 
 ## Project Details
 
 ### Overview
-_A concise summary of your project (2-3 sentences)_
+Binit is a community-driven waste management platform that empowers users to report garbage with photos and location details. Cleaners then take action, clean the area, and upload images of the cleaned space, ensuring transparency and accountability in the process.
 
 ### Problem Statement
-_Describe the problem your project aims to solve_
+Improper waste disposal is a growing urban challenge, leading to environmental degradation and health hazards. A lack of efficient reporting mechanisms and accountability further exacerbates the issue, leaving public spaces polluted.
 
 ### Solution
-_Explain your approach to solving the problem_
+Binit provides a seamless platform where users can easily report garbage through geotagged photos. Assigned cleaners are notified and take action, documenting the cleaned areas for accountability. Additionally, we encourage institutions to participate by organizing competitions to promote community engagement.
 
 ### Demo
 [![Project Demo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
@@ -42,19 +42,25 @@ _Replace VIDEO_ID with your YouTube video ID or provide an alternative demo link
 ## Technical Implementation
 
 ### Technologies Used
-- **Frontend**: [Technologies]
-- **Backend**: [Technologies]
+- **Frontend**: React, Tailwind CSS
+- **Backend**: Firebase Authentication
 - **Database**: [Technologies]
-- **APIs**: [Technologies]
+- **APIs**: Gemini, Open Street Map
 - **DevOps**: [Technologies]
 - **Other Tools**: [Technologies]
 
 ### Key Features
-- Feature 1
-- Feature 2
-- Feature 3
+- Garbage Reporting: Users upload photos and location details of unclean areas.
+- Cleaner Assignment: Voluntary participate in cleaning if interested.
+- Before & After Tracking: Uploaded images show the transformation post-cleanup.
+- Community Engagement: Institutions can host cleanup competitions to encourage participation.
+- Progress Leaderboards: Users track reports, resolved cases, and impact statistics.
 
 ## Setup Instructions
+
+# Clone the repository
+git clone https://github.com/Nishthajain7/BinIt.git
+cd binit
 
 ### Prerequisites
 - Requirement 1
@@ -74,13 +80,27 @@ _Replace VIDEO_ID with your YouTube video ID or provide an alternative demo link
 ## Additional Resources
 
 ### Project Timeline
-_Brief overview of your development process and milestones_
+- Phase 1: Idea conceptualization and wireframing
+
+- Phase 2: Backend and database setup
+
+- Phase 3: Frontend development and API integration
+
+- Phase 4: Testing and deployment
+
+- Phase 5: Community engagement and expansion
 
 ### Challenges Faced
-_Discuss technical challenges and how you overcame them_
 
+- Implementing accurate geolocation tracking
+
+- Ensuring real-time updates for cleaners and users
+
+- Encouraging participation from institutions and communities
 ### Future Enhancements
-_Share your vision for future development_
+
+- Integration with municipal waste management systems
+- Gamification elements for user engagement
 
 ### References (if any)
 - [Reference 1](link)
