@@ -13,7 +13,20 @@ const AuthenticationPage: React.FC = () => {
     };
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-100 to-gray-300 px-5">
-            <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
+
+            {/* Falling Leaves */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                {Array.from({ length: 10 }).map((_, index) => (
+                    <div key={index} className={`falling-leaf leaf-${index + 1}`}></div>
+                ))}
+            </div>
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                {Array.from({ length: 10 }).map((_, index) => (
+                    <div key={index} className={`falling-leaf-2 leaf-${index + 1+10}`}></div>
+                ))}
+            </div>
+
+            <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-8 z-10">
                 <h1 className="text-3xl font-bold text-center text-gray-700 mb-6">Sign In</h1>
                 <form onSubmit={handleLogin} className="space-y-4">
                     <div>

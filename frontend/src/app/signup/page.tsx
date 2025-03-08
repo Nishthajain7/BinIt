@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import Link from 'next/link';
 import React, { useState } from 'react';
 
@@ -8,12 +8,24 @@ const AuthenticationPage: React.FC = () => {
 
     const handleLogin = (event: React.FormEvent) => {
         event.preventDefault();
-        // Handle authentication logic here
         console.log('Logging in with:', { email, password });
     };
+
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-100 to-gray-300 px-5">
-            <div className="w-full max-w-md bg-white shadow-lg md:rounded-lg sm:h-full p-8">
+        <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-100 to-gray-300 px-5 overflow-hidden">
+            {/* Falling Leaves */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                {Array.from({ length: 10 }).map((_, index) => (
+                    <div key={index} className={`falling-leaf leaf-${index + 1}`}></div>
+                ))}
+            </div>
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                {Array.from({ length: 10 }).map((_, index) => (
+                    <div key={index} className={`falling-leaf-2 leaf-${index + 1+10}`}></div>
+                ))}
+            </div>
+            {/* Authentication Card */}
+            <div className="z-10 w-full max-w-md bg-white shadow-lg md:rounded-lg sm:h-full p-8">
                 <h1 className="text-3xl font-bold text-center text-gray-700 mb-6">Sign Up</h1>
                 <form onSubmit={handleLogin} className="space-y-4">
                     <div>
@@ -54,7 +66,7 @@ const AuthenticationPage: React.FC = () => {
                         className="w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition">
                         SignUp
                     </button>
-                    <Link href="/auth" className='flex justify-center text-blue-400 underline w-full'>Already have an account Sign-In!</Link>
+                    <Link href="/auth" className="flex justify-center text-blue-400 underline w-full">Already have an account Sign-In!</Link>
                 </form>
             </div>
         </div>

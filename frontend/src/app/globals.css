@@ -52,3 +52,173 @@ h1, h2, h3, h4, h5, h6 {
 .benefit-section:last-of-type > div {
   @apply mb-10;
 }
+
+
+@keyframes float {
+  0% {
+      transform: translateY(0) rotate(0deg);
+      opacity: 1;
+  }
+  50% {
+      transform: translateY(-20px) rotate(10deg);
+      opacity: 0.8;
+  }
+  100% {
+      transform: translateY(0) rotate(0deg);
+      opacity: 1;
+  }
+}
+
+.bg-sustainability-animation {
+  position: relative;
+  background-color: #edf7ed; /* Light green */
+  overflow: hidden;
+}
+@keyframes fall {
+  0% {
+      transform: translateY(-100px) translateX(0) rotate(0deg);
+      opacity: 1;
+  }
+  50% {
+      transform: translateY(50vh) translateX(-20px) rotate(90deg);
+      opacity: 0.8;
+  }
+  100% {
+      transform: translateY(100vh) translateX(-50px) rotate(360deg);
+      opacity: 0;
+  }
+}
+@keyframes fall {
+  0% {
+      transform: translateY(-100px) translateX(0) rotate(0deg);
+      opacity: 1;
+  }
+  50% {
+      transform: translateY(50vh) translateX(-20px) rotate(90deg);
+      opacity: 0.8;
+  }
+  100% {
+      transform: translateY(100vh) translateX(-50px) rotate(360deg);
+      opacity: 0;
+  }
+}
+
+.falling-leaf {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-image: url('/images/leaf.svg'); /* Replace with the correct path to your leaf image */
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: fall linear infinite;
+}
+.falling-leaf-2 {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-image: url('/images/leaf2.svg'); /* Replace with the correct path to your leaf image */
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: fall linear infinite;
+}
+
+.leaf-1 {
+  left: 5%;
+  animation-duration: 8s;
+  animation-delay: -4s; /* Negative delay */
+}
+.leaf-2 {
+  left: 15%;
+  animation-duration: 9s;
+  animation-delay: -2s;
+}
+.leaf-3 {
+  left: 25%;
+  animation-duration: 10s;
+  animation-delay: -3s;
+}
+.leaf-4 {
+  left: 35%;
+  animation-duration: 11s;
+  animation-delay: -5s;
+}
+.leaf-5 {
+  left: 45%;
+  animation-duration: 12s;
+  animation-delay: -6s;
+}
+.leaf-6 {
+  left: 55%;
+  animation-duration: 13s;
+  animation-delay: -4s;
+}
+.leaf-7 {
+  left: 65%;
+  animation-duration: 14s;
+  animation-delay: -7s;
+}
+.leaf-8 {
+  left: 75%;
+  animation-duration: 15s;
+  animation-delay: -1s;
+}
+.leaf-9 {
+  left: 85%;
+  animation-duration: 9s;
+  animation-delay: -2s;
+}
+.leaf-10 {
+  left: 95%;
+  animation-duration: 12s;
+  animation-delay: -5s;
+}
+.leaf-11 {
+  left: 50%;
+  animation-duration: 10s;
+  animation-delay: -3s;
+}
+.leaf-12 {
+  left: 60%;
+  animation-duration: 8s;
+  animation-delay: -1s;
+}
+.leaf-13 {
+  left: 70%;
+  animation-duration: 13s;
+  animation-delay: -6s;
+}
+.leaf-14 {
+  left: 80%;
+  animation-duration: 10s;
+  animation-delay: -4s;
+}
+.leaf-15 {
+  left: 20%;
+  animation-duration: 9s;
+  animation-delay: -2s;
+}
+.leaf-16 {
+  left: 30%;
+  animation-duration: 11s;
+  animation-delay: -3s;
+}
+.leaf-17 {
+  left: 40%;
+  animation-duration: 12s;
+  animation-delay: -6s;
+}
+.leaf-18 {
+  left: 50%;
+  animation-duration: 8s;
+  animation-delay: -4s;
+}
+.leaf-19 {
+  left: 10%;
+  animation-duration: 14s;
+  animation-delay: -7s;
+}
+.leaf-20 {
+  left: 90%;
+  animation-duration: 15s;
+  animation-delay: -5s;
+}
