@@ -14,9 +14,6 @@ const MapComponent = () => {
    
     const searchParams = useSearchParams();
     const name = searchParams.get('name');
-
-    
-
     useEffect(() => {
         if (typeof window !== 'undefined' && L) {
             const mapContainer = document.getElementById('map');
@@ -40,7 +37,7 @@ const MapComponent = () => {
                         keepBuffer: 6,
                         updateWhenIdle: false,
                     }).addTo(map);
-
+				}}}})
 	return (<div className="relative w-full h-screen">
 		<div className="absolute inset-0" id="map"></div>
 		
