@@ -3,6 +3,7 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../firebase";
+import Header from '@/components/Header';
 
 const AuthenticationPage: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -58,7 +59,7 @@ const AuthenticationPage: React.FC = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-100 to-gray-300 px-5">
-
+            <Header />
             {/* Falling Leaves */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 {Array.from({ length: 10 }).map((_, index) => (

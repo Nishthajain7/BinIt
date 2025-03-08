@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import React, { useState } from 'react';
 import { Transition } from '@headlessui/react';
 import { HiOutlineXMark, HiBars3 } from 'react-icons/hi2';
@@ -20,18 +21,30 @@ const Header: React.FC = () => {
             <Container className="!px-0">
                 <nav className="shadow-md md:shadow-none bg-white md:bg-transparent mx-auto flex justify-between items-center py-2 px-5 md:py-10">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2">
-                        <img src={'/images/logo.png'} className="text-foreground min-w-fit w-8" />
+                    <Link href="/" className="flex bg-white rounded-full p-6 items-center gap-2">
+                        <Image
+                            src="/images/logo.png"
+                            alt="Logo"
+                            width={20}
+                            height={20}
+                            className="text-foreground"
+                        />
                         <span className="manrope text-2xl font-semibold text-foreground cursor-pointer">
                             {siteDetails.siteName}
                         </span>
                     </Link>
 
                     {/* Desktop Menu */}
-                    <ul className="hidden md:flex space-x-6">
+                    <ul className="hidden md:flex bg-white rounded-full p-6">
                         <li>
-                            <Link href="/auth" className="text-black bg-primary hover:bg-primary-accent px-8 py-3 rounded-full transition-colors">
-                                Sign in
+                            <Link href="/auth" className="text-black py-3 px-3 rounded-full transition-colors">
+                                Get Started
+                            </Link>
+                            <Link href="/leaderboard" className="text-black py-3 px-3 rounded-full transition-colors">
+                                Leaderboard
+                            </Link>
+                            <Link href="/auth" className="text-black py-3 px-3 rounded-full transition-colors">
+                                Dashboard
                             </Link>
                         </li>
                     </ul>
@@ -41,7 +54,7 @@ const Header: React.FC = () => {
                         <button
                             onClick={toggleMenu}
                             type="button"
-                            className="bg-primary text-black focus:outline-none rounded-full w-10 h-10 flex items-center justify-center"
+                            className="bg-primary text-black focus:outline-none w-10 h-10 flex items-center justify-center"
                             aria-controls="mobile-menu"
                             aria-expanded={isOpen}
                         >
@@ -68,15 +81,23 @@ const Header: React.FC = () => {
             >
                 <div id="mobile-menu" className="md:hidden bg-white shadow-lg">
                     <ul className="flex flex-col space-y-4 pt-1 pb-6 px-6">
-                        {menuItems.map(item => (
+                        {menuItems.map((item) => (
                             <li key={item.text}>
-                                <Link href={item.url} className="text-foreground hover:text-primary block" onClick={toggleMenu}>
+                                <Link
+                                    href={item.url}
+                                    className="text-foreground hover:text-primary block"
+                                    onClick={toggleMenu}
+                                >
                                     {item.text}
                                 </Link>
                             </li>
                         ))}
                         <li>
-                            <Link href="#cta" className="text-black bg-primary hover:bg-primary-accent px-5 py-2 rounded-full block w-fit" onClick={toggleMenu}>
+                            <Link
+                                href="#cta"
+                                className="text-black bg-primary hover:bg-primary-accent px-5 py-2 rounded-full block w-fit"
+                                onClick={toggleMenu}
+                            >
                                 Get Started
                             </Link>
                         </li>

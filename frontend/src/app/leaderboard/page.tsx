@@ -14,7 +14,7 @@ export default function LeaderboardTable() {
     points: number;
   };
 
-  const fetchAllPlayers = async (): Promise<Player[]> => {
+    const fetchAllPlayers = async (): Promise<Player[]> => {
     const players: Player[] = []; // Initialize an empty array to store Player objects
     try {
       // Reference to the 'users' collection

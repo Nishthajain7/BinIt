@@ -27,7 +27,6 @@ const HomePage: React.FC = () => {
         <FAQ />
 
         <Stats />
-        
         <CTA />
       </Container>
       <Footer />
