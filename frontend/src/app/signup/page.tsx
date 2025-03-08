@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../firebase";
 
 const AuthenticationPage: React.FC = () => {
@@ -9,58 +9,69 @@ const AuthenticationPage: React.FC = () => {
   const [password, setPassword] = useState("");
   const [repassword, setRePassword] = useState("");
   const [message, setmessage] = useState("");
+  // Handle Google Sign-In
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      console.log("User signed in with Google:", result.user);
+      setmessage("Successfully signed in with Google!");
+    } catch (error) {
+      setmessage("Failed to sign in with Google. Please try again.");
+      console.error("Google Sign-In error:", error);
+    }
+  };
+
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-        if(repassword === password){
-            await createUserWithEmailAndPassword(
-                auth,
-                email,
-                password
-                );
-                setmessage("Redirecting to Page");
-        }
-        else{
-            setmessage("Passwords donot Match");
-        }
-
+      if (repassword === password) {
+        await createUserWithEmailAndPassword(auth, email, password);
+        setmessage("Redirecting to Page");
+      } else {
+        setmessage("Passwords donot Match");
+      }
     } catch (error) {
-        if (error instanceof Error && "code" in error) {
-          const firebaseError = error as { code: string }; // Narrow down type
-          switch (firebaseError.code) {
-            case "auth/weak-password":
-              setmessage("Password should be at least 6 characters long.");
-              break;
-            case "auth/email-already-in-use":
-              setmessage("This email is already registered. Please log in or use a different email.");
-              break;
-            case "auth/invalid-email":
-              setmessage("Please enter a valid email address.");
-              break;
-            case "auth/user-not-found":
-              setmessage("No user found with this email. Please sign up or check your email address.");
-              break;
-            case "auth/wrong-password":
-              setmessage("Incorrect password. Please try again.");
-              break;
-            default:
-              setmessage("Something went wrong. Please try again later.");
-          }
-        } else {
+      if (error instanceof Error && "code" in error) {
+        const firebaseError = error as { code: string }; // Narrow down type
+        switch (firebaseError.code) {
+          case "auth/weak-password":
+            setmessage("Password should be at least 6 characters long.");
+            break;
+          case "auth/email-already-in-use":
+            setmessage(
+              "This email is already registered. Please log in or use a different email."
+            );
+            break;
+          case "auth/invalid-email":
+            setmessage("Please enter a valid email address.");
+            break;
+          case "auth/user-not-found":
+            setmessage(
+              "No user found with this email. Please sign up or check your email address."
+            );
+            break;
+          case "auth/wrong-password":
+            setmessage("Incorrect password. Please try again.");
+            break;
+          default:
+            setmessage("Something went wrong. Please try again later.");
+        }
+      } else {
         setmessage("An unexpected error occurred.");
+      }
     }
-    }
-};
+  };
 
-return (
+  return (
     <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-100 to-gray-300 px-5 overflow-hidden">
       {/* Falling Leaves */}
-    <div className="absolute inset-0 z-0 pointer-events-none">
+      <div className="absolute inset-0 z-0 pointer-events-none">
         {Array.from({ length: 10 }).map((_, index) => (
-        <div key={index} className={`falling-leaf leaf-${index + 1}`}></div>
+          <div key={index} className={`falling-leaf leaf-${index + 1}`}></div>
         ))}
-    </div>
-    <div className="absolute inset-0 z-0 pointer-events-none">
+      </div>
+      <div className="absolute inset-0 z-0 pointer-events-none">
         {Array.from({ length: 10 }).map((_, index) => (
           <div
             key={index}
@@ -125,10 +136,19 @@ return (
           </div>
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition"
+            className="w-full bg-yellow-400 text-black py-2 px-4 rounded hover:bg-yellow-500 transition"
           >
             SignUp
           </button>
+          <p className="text-center">or</p>
+          <div className="flex flex-col items-center">
+            <button
+              onClick={handleGoogleSignIn}
+              className="w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-800 transition"
+            >
+              Sign in with Google
+            </button>
+          </div>
           <Link
             href="/auth"
             className="flex justify-center text-blue-400 underline w-full"
