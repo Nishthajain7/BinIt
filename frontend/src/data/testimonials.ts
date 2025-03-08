@@ -1,23 +1,19 @@
 import { ITestimonial } from "@/types";
-import { siteDetails } from "./siteDetails";
 
 export const testimonials: ITestimonial[] = [
     {
-        name: 'John Smith',
-        role: 'CEO at Company',
-        message: `${siteDetails.siteName}'s AI-driven insights have transformed how we approach financial planning for our clients. It's an invaluable resource in the modern financial landscape.`,
-        avatar: '/images/testimonial-1.webp',
+        name: 'Robert Swan',
+        message: 'The greatest threat to our planet is the belief that someone else will save it. Every piece of waste left behind is a step toward destruction. It is our duty to clean, conserve, and protect.',
+        avatar: '/images/robert.jpg',
     },
     {
-        name: 'Jane Doe',
-        role: 'CTO at Startup',
-        message: `As a CTO, I'm impressed by ${siteDetails.siteName}'s robust security measures and seamless integrations. It's rare to find an app that balances user-friendliness with such advanced technology.`,
-        avatar: '/images/testimonial-2.webp',
+        name: 'Ban Ki-moon',
+        message: 'Waste is not just trash; it is a missed opportunity. When we recycle, repurpose, and reduce, we contribute to a cleaner and more sustainable planet.',
+        avatar: '/images/ban-ki-moon.jpg',
     },
     {
         name: 'Emily Johnson',
-        role: 'Product Manager',
-        message: `${siteDetails.siteName} is revolutionizing personal finance management. Its intuitive design and powerful features make it an indispensable tool for anyone serious about financial growth.`,
+        message: 'We do not inherit the Earth from our ancestors; we borrow it from our children. Keeping our surroundings clean is the least we can do to ensure a better future.',
         avatar: '/images/testimonial-3.webp',
     },
 ];

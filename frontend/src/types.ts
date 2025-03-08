@@ -29,7 +29,6 @@ export interface IFAQ {
 
 export interface ITestimonial {
     name: string;
-    role: string;
     message: string;
     avatar: string;
 }
