@@ -6,12 +6,12 @@ import 'leaflet.markercluster/dist/leaflet.markercluster.js';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import axios from 'axios';
-import Popup from '../../components/popup';
-import { db } from "../firebase"; // Adjust the path
+import Popup from '../../../components/popup';
+import { db } from "../../firebase"; // Adjust the path
 import { doc, updateDoc, arrayUnion, GeoPoint, setDoc, getDoc } from "firebase/firestore";
 
 const MapComponent = ({ params }) => {
-    const [place, setPlace] = useState(params); // Default location
+    const [place, setPlace] = useState(params.id !== "current" ? params.id : "");
     const [searchTimeout, setSearchTimeout] = useState(null);
     const [markers, setMarkers] = useState([]);
     const [selectedMarker, setSelectedMarker] = useState(null);
@@ -20,12 +20,77 @@ const MapComponent = ({ params }) => {
     const markersRef = useRef([]);
     const mapContainerRef = useRef(null);
     const userMarkerRef = useRef(null);
-    const [markerClusterGroup, setMarkerClusterGroup] = useState(null);
+    const markerClusterGroup = useRef(null);
 
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
 
+        if (!mapRef.current && mapContainerRef.current) {
+            if (params.id === "current") {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition, handleError);
+                } else {
+                    initMap(20.5937, 78.9629);
+                }
+            } else {
+                initMap(20.5937, 78.9629);
+                searchPlace(params.id);
+            }
+        }
+    }, [params]);
+
+    function showPosition(position) {
+        let x = position.coords.latitude;
+        let y = position.coords.longitude;
+        initMap(x, y);
+        addUserMarker(x, y);
+    }
+
+    function handleError(error) {
+        console.error("Geolocation error:", error);
+        initMap(20.5937, 78.9629);
+    }
+
+    function initMap(lat, lng) {
+        if (!mapRef.current) {
+            mapRef.current = L.map(mapContainerRef.current).setView([lat, lng], 15);
+
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                keepBuffer: 6,
+            }).addTo(mapRef.current);
+
+            markerClusterGroup.current = L.markerClusterGroup();
+            mapRef.current.addLayer(markerClusterGroup.current);
+
+            mapRef.current.on('click', (e) => addMarker(e));
+        } else {
+            mapRef.current.setView([lat, lng], 15);
+        }
+    }
+
+    function addMarker(e) {
+        const customIcon = L.divIcon({
+            className: "custom-marker",
+            html: `<div class="bg-red-500 text-white font-bold text-xs flex items-center justify-center w-8 h-8 rounded-full shadow-lg border-2 border-white">📍</div>`,
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32]
+        });
+
+        const newMarker = L.marker(e.latlng, { icon: customIcon }).addTo(mapRef.current);
+        newMarker.on('click', () => {
+            setSelectedMarker(e.latlng);
+            setPopupOpen(true);
+        });
+        storedata(e.latlng);
+        markersRef.current.push(newMarker);
+        setMarkers([...markersRef.current]);
+        markerClusterGroup.current.addLayer(newMarker);
+    }
 
     function storedata(latlng) {
-        console.log(latlng)
+        console.log(latlng);
         const markerRef = doc(db, "Markers", "all");
         updateDoc(markerRef, {
             all: arrayUnion(new GeoPoint(latlng.lat, latlng.lng))
@@ -34,7 +99,7 @@ const MapComponent = ({ params }) => {
                 await setDoc(markerRef, {
                     all: [new GeoPoint(latlng.lat, latlng.lng)]
                 });
-                console.log("Done")
+                console.log("Done");
             } else {
                 console.error("Error storing data:", error);
             }
@@ -44,7 +109,6 @@ const MapComponent = ({ params }) => {
     async function getdata() {
         const markerRef = doc(db, "Markers", "all");
         try {
-            // Fetch the document
             const docSnap = await getDoc(markerRef);
             if (docSnap.exists()) {
                 const data = docSnap.data();
@@ -65,108 +129,45 @@ const MapComponent = ({ params }) => {
             return [];
         }
     }
-    
+
+    async function loadMarkers() {
+        const geoPoints = await getdata();
+
+        if (geoPoints && mapRef.current) {
+            geoPoints.forEach((geoPoint) => {
+                const lat = geoPoint.latitude;
+                const lng = geoPoint.longitude;
+                const customIcon = L.divIcon({
+                    className: "custom-marker",
+                    html: `<div class="bg-red-500 text-white font-bold text-xs flex items-center justify-center w-8 h-8 rounded-full shadow-lg border-2 border-white">📍</div>`,
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 32],
+                    popupAnchor: [0, -32]
+                });
+                const marker = L.marker([lat, lng], { icon: customIcon }).addTo(mapRef.current);
+                markersRef.current.push(marker);
+            });
+
+            setMarkers([...markersRef.current]);
+        }
+    }
 
     useEffect(() => {
-        if (typeof window === 'undefined') return; // Ensure code runs on client side
-
-        async function loadMarkers() {
-            // Fetch GeoPoints from Firestore
-            const geoPoints = await getdata();
-    
-            if (geoPoints && mapRef.current) {
-                // Add each GeoPoint as a marker on the map
-                geoPoints.forEach((geoPoint) => {
-                    const lat = geoPoint.latitude;
-                    const lng = geoPoint.longitude;
-                    const customIcon = L.divIcon({
-                        className: "custom-marker",
-                        html: `<div class="bg-red-500 text-white font-bold text-xs flex items-center justify-center w-8 h-8 rounded-full shadow-lg border-2 border-white">📍</div>`,
-                        iconSize: [32, 32],
-                        iconAnchor: [16, 32],
-                        popupAnchor: [0, -32]
-                    });
-                    const marker = L.marker([lat, lng],{icon: customIcon}).addTo(mapRef.current);
-                    markersRef.current.push(marker);
-                });
-    
-                setMarkers([...markersRef.current]);
-            }
-        }
-    
-        // if (!mapRef.current && mapContainerRef.current) {
-        //     if (navigator.geolocation) {
-        //         navigator.geolocation.getCurrentPosition(showPosition, handleError);
-        //         loadMarkers(); 
-        //     } else {
-        //         initMap(20.5937, 78.9629);
-        //         loadMarkers();
-        //     }
-        // }
         if (!mapRef.current && mapContainerRef.current) {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition((position) => {
                     const { latitude, longitude } = position.coords;
-                    initMap(latitude, longitude); // Initialize map
+                    initMap(latitude, longitude);
                     addUserMarker(latitude, longitude);
-                    loadMarkers(); // Load markers after map initialization
+                    loadMarkers();
                 }, handleError);
             } else {
-                initMap(20.5937, 78.9629); // Default location
-                loadMarkers(); // Load markers after map initialization
+                initMap(20.5937, 78.9629);
+                loadMarkers();
             }
         }
-        
     }, []);
 
-    // function showPosition(position) {
-    //     let x = position.coords.latitude;
-    //     let y = position.coords.longitude;
-    //     initMap(x, y);
-    //     addUserMarker(x, y);
-    // }
-
-    function handleError(error) {
-        console.error("Geolocation error:", error);
-        initMap(20.5937, 78.9629);
-    }
-
-    function initMap(lat, lng) {
-        if (!mapRef.current) {
-            mapRef.current = L.map(mapContainerRef.current).setView([lat, lng], 15);
-
-            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                keepBuffer: 6,
-            }).addTo(mapRef.current);
-
-           
-            const clusterGroup = L.markerClusterGroup();
-            setMarkerClusterGroup(clusterGroup);
-            mapRef.current.addLayer(clusterGroup);
-
-        const customIcon = L.divIcon({
-            className: "custom-marker",
-            html: `<div class="bg-red-500 text-white font-bold text-xs flex items-center justify-center w-8 h-8 rounded-full shadow-lg border-2 border-white">📍</div>`,
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-        });
-
-        function addMarker(e) {
-            const newMarker = L.marker(e.latlng, { icon: customIcon }).addTo(mapRef.current);
-            newMarker.on('click', () => {
-                setSelectedMarker(e.latlng);
-                setPopupOpen(true);
-            });
-            storedata(e.latlng);
-            markersRef.current.push(newMarker);
-            setMarkers([...markersRef.current]);
-            clusterGroup.addLayer(newMarker);
-        }
-            mapRef.current.on('click', (e) => addMarker(e, clusterGroup));
-        }
-    }
     function addUserMarker(x, y) {
         const userIcon = L.divIcon({
             className: "user-marker",
@@ -202,13 +203,11 @@ const MapComponent = ({ params }) => {
             if (data.length > 0) {
                 const { lat, lon, display_name } = data[0];
 
-                mapRef.current.setView([lat, lon], 10); // Move map to new location
+                mapRef.current.setView([lat, lon], 10);
 
-         
                 markersRef.current.forEach(marker => mapRef.current.removeLayer(marker));
                 markersRef.current = [];
 
-          
                 const newMarker = L.marker([lat, lon])
                     .addTo(mapRef.current)
                     .bindPopup(display_name)
@@ -217,8 +216,8 @@ const MapComponent = ({ params }) => {
                 markersRef.current.push(newMarker);
                 setMarkers([...markersRef.current]);
                 
-                if (markerClusterGroup) {
-                    markerClusterGroup.addLayer(newMarker);
+                if (markerClusterGroup.current) {
+                    markerClusterGroup.current.addLayer(newMarker);
                 }
             } else {
                 alert("Location not found!");
@@ -228,24 +227,23 @@ const MapComponent = ({ params }) => {
         }
     };
 
-    // Delayed Search to prevent excessive API calls
     useEffect(() => {
-        if (params !== "current") {
+        if (params.id !== "current") {
             if (!place) return;
             if (searchTimeout) clearTimeout(searchTimeout);
 
             const timeout = setTimeout(() => {
                 searchPlace(place);
-            }, 500); // 500ms delay
+            }, 500);
 
             setSearchTimeout(timeout);
-            return () => clearTimeout(timeout); // Cleanup
+            return () => clearTimeout(timeout);
         }
-    }, [place, params]);
+    }, [place, params.id]);
 
     return (
         <div className="w-full h-screen relative">
-            {params !== "current" && (
+            {params.id !== "current" && (
                 <input
                     type="text"
                     placeholder="Search for a place"
