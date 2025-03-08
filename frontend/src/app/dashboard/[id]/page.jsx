@@ -78,7 +78,6 @@ const MapComponent = ({ params }) => {
             iconAnchor: [16, 32],
             popupAnchor: [0, -32]
         });
-
         const newMarker = L.marker(latlng, { icon: customIcon }).addTo(mapRef.current);
         newMarker.on('click', () => {
             setSelectedMarker(latlng);
@@ -86,28 +85,43 @@ const MapComponent = ({ params }) => {
             setMarker(latlng); // Fixed the setMarker call
         });
         markersRef.current.push(newMarker);
-
         if (markerClusterGroup.current) {
             markerClusterGroup.current.addLayer(newMarker);
         }
     }
 
-    function storedata(latlng) {
-        console.log(latlng);
+
+
+    function storedata(latlng, desc,col) {
+        console.log("Storing marker:", latlng, "with descriptions:", desc);
+    
         const markerRef = doc(db, "Markers", "all");
+    
+        // Try to update both fields (`all` and `desc`) together
         updateDoc(markerRef, {
-            all: arrayUnion(new GeoPoint(latlng.lat, latlng.lng))
-        }).catch(async (error) => {
+            all: arrayUnion(new GeoPoint(latlng.lat, latlng.lng)), // Append GeoPoint
+            desc: arrayUnion(desc),
+            type: arrayUnion(col), // Add the entire `desc` array as a single entry
+        })
+        .then(() => {
+            console.log("Marker and descriptions updated successfully.");
+        })
+        .catch(async (error) => {
             if (error.code === "not-found") {
+                // If the document doesn't exist, create it with both fields
                 await setDoc(markerRef, {
-                    all: [new GeoPoint(latlng.lat, latlng.lng)]
+                    all: [new GeoPoint(latlng.lat, latlng.lng)], // Initialize GeoPoints array
+                    desc: [desc],
+                    type: [col] // Store `desc` as an array of arrays
                 });
-                console.log("Done");
+                console.log("Document created and marker stored successfully.");
             } else {
                 console.error("Error storing data:", error);
             }
         });
     }
+    
+
 
     async function getdata() {
         const markerRef = doc(db, "Markers", "all");
@@ -243,9 +257,9 @@ const MapComponent = ({ params }) => {
             {popupOpen && (
                 <Popup
                     onClose={() => setPopupOpen(false)}
-                    onsubmit={() => {
+                    onsubmit={(desc,col) => {
                         if (marker) {
-                            storedata(marker);
+                            storedata(marker,desc,col);
                             setPopupOpen(false);
                         }
                     }}

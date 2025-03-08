@@ -1,5 +1,6 @@
 'use client';
 
+
 import React, { useState } from 'react';
 import { IoMdClose } from "react-icons/io";
 
@@ -7,6 +8,7 @@ import { IoMdClose } from "react-icons/io";
 function Popup({ onClose , onsubmit }) {
   const [selectedColor, setSelectedColor] = useState(null);
   const [file, setFile] = useState(null);
+  const[desc,setDesc]=useState("");
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -19,7 +21,7 @@ function Popup({ onClose , onsubmit }) {
 
   function submit(event) {
     event.preventDefault();
-    onsubmit();
+    onsubmit(desc,selectedColor);
   }
   
 
@@ -63,7 +65,9 @@ function Popup({ onClose , onsubmit }) {
         <label className="text-green-700 text-bold font-bold ">Description</label>
             <textarea
             placeholder="Give a description"
-            rows="4"  // This adds more lines
+            rows="4"
+            onChange={(e)=>setDesc(e.target.value)}  // This adds more lines
+            value={desc}
             className="w-full px-4 py-2 rounded-lg bg-gray-100 text-black focus:ring-2 focus:ring-green-500 outline-none shadow-md resize-none"
             />
           <label className="text-green-700 text-sm font-bold">Upload Image</label>
