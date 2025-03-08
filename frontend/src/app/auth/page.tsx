@@ -64,7 +64,7 @@ const AuthenticationPage: React.FC = () => {
         try {
             const result = await signInWithPopup(auth, provider);
             console.log("User signed in with Google:", result.user);
-            setmessage("Successfully signed in with Google!");
+            router.back();
         } catch (error) {
             setmessage("Failed to sign in with Google. Please try again.");
             console.error("Google Sign-In error:", error);

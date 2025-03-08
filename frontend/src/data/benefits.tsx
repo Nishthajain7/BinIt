@@ -1,4 +1,5 @@
-import {FiBriefcase, FiDollarSign, FiLock, FiPieChart, FiShield, FiTarget, FiUser, FiCamera, FiCheckCircle} from "react-icons/fi";
+import {FiBriefcase, FiUsers, FiTarget, FiUser, FiCamera, FiCheckCircle} from "react-icons/fi";
+import { FaLeaf } from "react-icons/fa6";
 
 import { IBenefit } from "@/types"
 
@@ -23,7 +24,7 @@ export const benefits: IBenefit[] = [
                 icon: <FiCheckCircle size={26} />
             }
         ],
-        imageSrc: "/images/mockup-1.webp"
+        imageSrc: "/images/image1.png"
     },
     {
         title: "Our Aim",
@@ -32,7 +33,7 @@ export const benefits: IBenefit[] = [
             {
                 title: "Encourage Community Participation",
                 description: "Empower people to report garbage effortlessly and be a part of the change.",
-                icon: <FiDollarSign size={26} />
+                icon: <FiUsers size={26} />
             },
             {
                 title: "Engage Education Institutions",
@@ -42,9 +43,9 @@ export const benefits: IBenefit[] = [
             {
                 title: "Leverage Technology for a Greener Future",
                 description: "Use location tracking and image verification to enhance waste management efficiency",
-                icon: <FiPieChart size={26} />
+                icon: <FaLeaf size={26} />
             }
         ],
-        imageSrc: "/images/mockup-2.webp"
+        imageSrc: "/images/image2.png"
     }
 ]
