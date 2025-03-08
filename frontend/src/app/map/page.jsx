@@ -25,6 +25,7 @@ const MapComponent = () => {
 
 
     function storedata(latlng) {
+        console.log(latlng)
         const markerRef = doc(db, "Markers", "all");
         updateDoc(markerRef, {
             all: arrayUnion(new GeoPoint(latlng.lat, latlng.lng))
@@ -33,6 +34,7 @@ const MapComponent = () => {
                 await setDoc(markerRef, {
                     all: [new GeoPoint(latlng.lat, latlng.lng)]
                 });
+                console.log("Done")
             } else {
                 console.error("Error storing data:", error);
             }
@@ -77,8 +79,14 @@ const MapComponent = () => {
                 geoPoints.forEach((geoPoint) => {
                     const lat = geoPoint.latitude;
                     const lng = geoPoint.longitude;
-    
-                    const marker = L.marker([lat, lng]).addTo(mapRef.current);
+                    const customIcon = L.divIcon({
+                        className: "custom-marker",
+                        html: `<div class="bg-red-500 text-white font-bold text-xs flex items-center justify-center w-8 h-8 rounded-full shadow-lg border-2 border-white">📍</div>`,
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 32],
+                        popupAnchor: [0, -32]
+                    });
+                    const marker = L.marker([lat, lng],{icon: customIcon}).addTo(mapRef.current);
                     markersRef.current.push(marker);
                 });
     
@@ -86,23 +94,37 @@ const MapComponent = () => {
             }
         }
     
+        // if (!mapRef.current && mapContainerRef.current) {
+        //     if (navigator.geolocation) {
+        //         navigator.geolocation.getCurrentPosition(showPosition, handleError);
+        //         loadMarkers(); 
+        //     } else {
+        //         initMap(20.5937, 78.9629);
+        //         loadMarkers();
+        //     }
+        // }
         if (!mapRef.current && mapContainerRef.current) {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition, handleError);
-                loadMarkers(); 
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const { latitude, longitude } = position.coords;
+                    initMap(latitude, longitude); // Initialize map
+                    addUserMarker(latitude, longitude);
+                    loadMarkers(); // Load markers after map initialization
+                }, handleError);
             } else {
-                initMap(20.5937, 78.9629);
-                loadMarkers();
+                initMap(20.5937, 78.9629); // Default location
+                loadMarkers(); // Load markers after map initialization
             }
         }
+        
     }, []);
 
-    function showPosition(position) {
-        let x = position.coords.latitude;
-        let y = position.coords.longitude;
-        initMap(x, y);
-        addUserMarker(x, y);
-    }
+    // function showPosition(position) {
+    //     let x = position.coords.latitude;
+    //     let y = position.coords.longitude;
+    //     initMap(x, y);
+    //     addUserMarker(x, y);
+    // }
 
     function handleError(error) {
         console.error("Geolocation error:", error);
@@ -134,10 +156,9 @@ const MapComponent = () => {
             const newMarker = L.marker(e.latlng, { icon: customIcon }).addTo(mapRef.current);
             newMarker.on('click', () => {
                 setSelectedMarker(e.latlng);
-                storedata(e.latlng);
                 setPopupOpen(true);
             });
-
+            storedata(e.latlng);
             markersRef.current.push(newMarker);
             setMarkers([...markersRef.current]);
             clusterGroup.addLayer(newMarker);
