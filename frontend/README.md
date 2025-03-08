@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fnexi-launch%2Ffinwise-landing-page)
+
+# Finwise - Next.js + Tailwind Landing Page Template
+
+Finwise is a lightweight, easily configurable, and customizable **Next.js** and **Tailwind CSS** landing page template. It’s built to be adaptable, performant, and perfect for any product launch, portfolio, or promotional site.
+
+Try out the demo here: [https://finwise-omega.vercel.app](https://finwise-omega.vercel.app).
+
+Please check out the documentation below to get started.
+
+---
+
+## Features
+
+- **Next.js** app router with **TypeScript**
+- **Tailwind CSS** v3 for flexible styling customization
+- Smooth transitions powered by **Framer Motion**
+- Built-in **font optimization** with [next/font](https://nextjs.org/docs/app/api-reference/components/font)
+- Automatic **image optimization** via [next/image](https://nextjs.org/docs/app/building-your-application/optimizing/images)
+- Access to **31+ icon packs** via [React Icons](https://react-icons.github.io/react-icons/)
+- Near-perfect **Lighthouse score**
+- Modular, responsive, and **scalable components**
+- **Free lifetime updates**
+
+---
+
+## Sections
+
+- Hero
+- Partners or Clients Logos
+- Features
+- Pricing
+- Testimonials
+- FAQ
+- Statistics
+- CTA
+- Footer
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Before starting, make sure you have the following installed:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Node.js**: Version 18 or later
+- **npm**: Version 8 or later (bundled with Node.js)
+- **Code editor**: [VS Code](https://code.visualstudio.com/) is recommended.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Steps
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Install dependencies**: Run `npm install`
+2. **Run the development server**: `npm run dev`
+3. **View your project**: Open [localhost:3000](http://localhost:3000)
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Customization
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Edit colors**: Update `globals.css` for primary, secondary, background, and accent colors.
+2. **Update site details**: Customize `siteDetails.ts` in `/src/data` to reflect your brand and site info.
+3. **Modify content**: Files in `/src/data` handle data for navigation, features, pricing, testimonials, and more.
+4. **Replace favicon**: Add your icon to `/src/app/favicon.ico`.
+5. **Add images**: Update `public/images` for Open Graph metadata (e.g., `og-image.jpg`, `twitter-image.jpg`).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Deploying on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The fastest way to deploy Finwise is on [Vercel](https://vercel.com/). Simply click the "Deploy with Vercel" button at the top of this README, or check the [Next.js deployment docs](https://vercel.com/docs/deployments/deployment-methods) for other deployment options.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Contributing
+
+Finwise is an open-source project, and we welcome contributions from the community! If you have ideas for new components, designs, layouts, or optimizations, please join us in making Finwise even better.
+
+### How to Contribute
+
+1. **Fork the Repository**: Clone it locally.
+2. **Create a New Branch**: For example, `feature/new-section` or `fix/style-issue`.
+3. **Develop and Test**: Make sure your changes work and don't break existing functionality.
+4. **Submit a Pull Request**: Open a pull request with a clear description of your changes, and we'll review it.
+
+### Ideas for Contributions
+
+- New component sections (team introductions, comparison table, case studies, etc.)
+- Additional page variants (e.g., agency, eCommerce, portfolio layouts)
+- Additional themes
+- Documentation updates, tutorials, or guides
+
+---
+
+## Community and Support
+
+Join our community discussions on GitHub to share ideas, ask questions, or suggest improvements. Let’s build something amazing together!
+
+
+--- 
+
+## License
+
+This project is open-source and available under the MIT License. Feel free to use, modify, and distribute it for personal or commercial projects.
