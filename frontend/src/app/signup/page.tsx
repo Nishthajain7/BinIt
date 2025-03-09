@@ -4,33 +4,69 @@ import React, { useState } from "react";
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../firebase";
 import Header from "@/components/Header";
+import { useRouter } from "next/navigation";
+import { doc, setDoc } from "firebase/firestore"; // Import Firestore methods
+import { db } from "../firebase"
 
 const AuthenticationPage: React.FC = () => {
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setRePassword] = useState("");
   const [message, setmessage] = useState("");
-  // Handle Google Sign-In
+  const router = useRouter();
+
+
+  const addUserToFirestore = async (uid: string, name: string, email: string): Promise<void> => {
+    try {
+      const userRef = doc(db, "Users", uid); // Create a reference to the user's document
+      await setDoc(userRef, {
+        name: name,     // Add name field
+        email: email,   // Add email field
+        points: 0       // Initialize points to 0
+      });
+      console.log("User document successfully created in Firestore!");
+    } catch (error) {
+      console.error("Error adding user to Firestore:", error);
+    }
+  };
+
+
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      console.log("User signed in with Google:", result.user);
+      const user = result.user;
+  
+      console.log("User signed in with Google:", user);
+  
+      // Add user to Firestore
+      await addUserToFirestore(user.uid, user.displayName??"", user.email??"");
+  
       setmessage("Successfully signed in with Google!");
+      router.push('/dashboard');
     } catch (error) {
       setmessage("Failed to sign in with Google. Please try again.");
       console.error("Google Sign-In error:", error);
     }
   };
+  
+
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
       if (repassword === password) {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const result = await createUserWithEmailAndPassword(auth, email, password);
+        const user = result.user;
+  
+        // Add user to Firestore
+        await addUserToFirestore(user.uid, name, email); // Use a default name if no displayName
+  
         setmessage("Redirecting to Page");
+        router.push('/dashboard');
       } else {
-        setmessage("Passwords donot Match");
+        setmessage("Passwords do not Match");
       }
     } catch (error) {
       if (error instanceof Error && "code" in error) {
@@ -63,6 +99,7 @@ const AuthenticationPage: React.FC = () => {
       }
     }
   };
+
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-100 to-gray-300 px-5 overflow-hidden">
@@ -100,6 +137,21 @@ const AuthenticationPage: React.FC = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="w-full mt-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-indigo-300"
+              required
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-600"
+            >
+              Name
+            </label>
+            <input
+              type="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="w-full mt-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-indigo-300"
               required
             />

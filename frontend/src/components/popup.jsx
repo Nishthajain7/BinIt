@@ -1,29 +1,39 @@
 'use client';
 
-
 import React, { useState } from 'react';
 import { IoMdClose } from "react-icons/io";
 
-
-function Popup({ onClose , onsubmit }) {
+function Popup({ onClose, onsubmit }) {
   const [selectedColor, setSelectedColor] = useState(null);
   const [file, setFile] = useState(null);
-  const[desc,setDesc]=useState("");
+  const [desc, setDesc] = useState("");
+  const [base64Image, setBase64Image] = useState(""); // Store Base64 image
+  console.log("base url",base64Image);
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      // Convert image to Base64
+      const reader = new FileReader();
+      reader.onload = () => {
+        setBase64Image(reader.result); // Save Base64 string
+      };
+      reader.readAsDataURL(selectedFile);
+    }
   };
+
 
   const handleRemoveFile = () => {
     setFile(null);
+    setBase64Image(""); // Clear Base64
     document.getElementById('fileUpload').value = ''; // Reset input field
   };
 
   function submit(event) {
     event.preventDefault();
-    onsubmit(desc,selectedColor);
+    onsubmit(desc, selectedColor, base64Image); // Pass Base64 to onsubmit
   }
-  
 
   return (
     <div className="fixed inset-0 flex items-center justify-end bg-transparent bg-opacity-10 backdrop-blur-lg z-1000">
@@ -32,7 +42,7 @@ function Popup({ onClose , onsubmit }) {
           onClick={onClose}
           className="absolute top-4 right-4 p-2 rounded-full text-gray-700 bg-gray-200 hover:bg-red-500 hover:text-white transition-all duration-300"
         >
-          < IoMdClose size={24} />
+          <IoMdClose size={24} />
         </button>
 
         <h1 className="text-center text-2xl font-extrabold text-green-700 sm:text-3xl mt-6">
@@ -62,14 +72,15 @@ function Popup({ onClose , onsubmit }) {
         </div>
 
         <form className="w-full mt-6 space-y-4" onSubmit={submit}>
-        <label className="text-green-700 text-bold font-bold ">Description</label>
-            <textarea
+          <label className="text-green-700 text-bold font-bold">Description</label>
+          <textarea
             placeholder="Give a description"
             rows="4"
-            onChange={(e)=>setDesc(e.target.value)}  // This adds more lines
+            onChange={(e) => setDesc(e.target.value)}
             value={desc}
             className="w-full px-4 py-2 rounded-lg bg-gray-100 text-black focus:ring-2 focus:ring-green-500 outline-none shadow-md resize-none"
-            />
+          />
+
           <label className="text-green-700 text-sm font-bold">Upload Image</label>
           <div className="flex items-center bg-gray-100 rounded-lg p-2 shadow-md w-full">
             <input type="file" id="fileUpload" className="hidden" onChange={handleFileChange} />
@@ -84,7 +95,7 @@ function Popup({ onClose , onsubmit }) {
               <div className="flex items-center ml-2 bg-white px-2 py-1 rounded-lg shadow-sm">
                 <span className="text-gray-700 text-sm truncate max-w-[150px]">{file.name}</span>
                 <button onClick={handleRemoveFile} className="ml-2 text-red-500 hover:text-red-700">
-                  < IoMdClose size={16} />
+                  <IoMdClose size={16} />
                 </button>
               </div>
             )}

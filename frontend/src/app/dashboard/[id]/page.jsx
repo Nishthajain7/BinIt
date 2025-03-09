@@ -8,6 +8,7 @@ import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import Popup from '../../../components/popup';
 import SubmitPopup from '../../../components/sidybar';
+import { useRouter } from "next/navigation";
 import { db } from "../../firebase"; // Adjust the path
 import { doc, updateDoc, arrayUnion, GeoPoint, setDoc, getDoc } from "firebase/firestore";
 import { desc } from "framer-motion/client";
@@ -28,7 +29,9 @@ const MapComponent = ({ params }) => {
     const mapContainerRef = useRef(null);
     const userMarkerRef = useRef(null);
     const markerClusterGroup = useRef(null);
-
+    const backButtonRef = useRef(null);
+    const homeButtonRef = useRef(null);
+    const router = useRouter();
     useEffect(() => {
         if (typeof window === 'undefined') return;
 
@@ -43,6 +46,14 @@ const MapComponent = ({ params }) => {
                 initMap(20.5937, 78.9629);
                 searchPlace(params.id);
             }
+            backButtonRef.current.addEventListener('click', () => {
+                router.push("/dashboard");
+            });
+            homeButtonRef.current.addEventListener('click', () => {
+                if (userMarkerRef.current) {
+                    mapRef.current.setView(userMarkerRef.current.getLatLng());
+                }
+            });
         }
     }, [params]);
 
@@ -181,6 +192,7 @@ const MapComponent = ({ params }) => {
                 marker.on('click', () => {
                     SetDesc(desc); // Set description
                     SetType(type); // Set type
+
                     setdescOpen(true); // Open description popup
                 });
                 markersRef.current.push(marker);
@@ -264,15 +276,29 @@ const MapComponent = ({ params }) => {
 
     return (
         <div className="w-full h-screen relative">
-            {params.id !== "current" && (
+<div className="absolute top-5 left-5 p-4 backdrop-blur-md text-black bg-opacity-100 rounded-lg shadow-md z-50 flex flex-col space-y-2 border">
                 <input
                     type="text"
                     placeholder="Search for a place"
                     value={place}
                     onChange={(e) => setPlace(e.target.value)}
-                    className="absolute top-5 left-5 p-2 bg-white border rounded-md z-50"
+                    className="p-2 bg-white border rounded-md"
                 />
-            )}
+
+                <div className="flex space-x-2 rounded-md">
+                    <button ref={backButtonRef} className="p-2 bg-white border rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" className="bi bi-caret-left-fill" viewBox="0 0 16 16">
+                            <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+                        </svg>
+                    </button>
+
+                    <button ref={homeButtonRef} className="p-2 bg-white border rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" className="bi bi-house-door-fill" viewBox="0 0 16 16">
+                            <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
             <div ref={mapContainerRef} className="w-full h-full" id="map"></div>
 
             {popupOpen && (
@@ -280,12 +306,15 @@ const MapComponent = ({ params }) => {
                     onClose={() => setPopupOpen(false)}
                     onsubmit={(desc,col) => {
                         if (marker) {
-                            storedata(marker,desc,col);
+                            storedata(marker,desc,col,img);
                             setPopupOpen(false);
                         }
                     }}
                 />
             )}
+
+
+
             {descOpen && (
                 <SubmitPopup
                     onClose={() => setdescOpen(false)}

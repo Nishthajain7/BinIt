@@ -1,4 +1,5 @@
 "use client";
+
 import { RiMedalFill } from "react-icons/ri";
 import { GoTrophy } from "react-icons/go";
 import { PiMedal } from "react-icons/pi";
@@ -9,83 +10,90 @@ import { db } from "../firebase";
 import { useEffect, useState } from "react";
 
 export default function LeaderboardTable() {
+  // Define the Player type
   type Player = {
     name: string;
     points: number;
   };
 
-    const fetchAllPlayers = async (): Promise<Player[]> => {
-    const players: Player[] = []; // Initialize an empty array to store Player objects
+  // Fetch all players from Firestore
+  const fetchAllPlayers = async (): Promise<Player[]> => {
+    const players: Player[] = []; // Initialize empty array
     try {
-      // Reference to the 'users' collection
+      // Reference to the 'Users' collection
       const usersCollectionRef = collection(db, "Users");
       // Fetch all documents in the collection
       const querySnapshot = await getDocs(usersCollectionRef);
-      // Iterate over each document and extract the required data
+      // Process each document
       querySnapshot.forEach((doc) => {
-        const data = doc.data(); // Get document data
-        // Push the name and points into the players array, if they exist
-        if (data.name && data.points) {
+        const data = doc.data(); // Extract document data
+        // Validate fields and add them to the players array
+        if (typeof data.name === "string" && typeof data.points === "number") {
           players.push({
             name: data.name,
             points: data.points,
           });
+        } else {
+          console.warn(`Invalid data format in document: ${doc.id}`, data);
         }
       });
-      console.log(players); // Log the resulting array (optional)
     } catch (error) {
       console.error("Error fetching player data:", error);
     }
-    return players; // Return the array of Player objects
+    return players; // Return the players array
   };
 
+  // State for storing player data and loading state
   const [players, setPlayers] = useState<Player[]>([]);
-  const [isLoading, setIsLoading] = useState(true); // Track loading state
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       const playerData = await fetchAllPlayers();
-      setPlayers(playerData);
+      setPlayers(playerData); // Update players state
       setIsLoading(false); // Data is loaded
     };
     fetchData();
   }, []);
 
-  const displayer = players.map((item, index) => {
-    let col = "";
-    let icon = <div className="w-5 h-5" />;
-    if (index === 0) {
-      col = "bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200";
-      icon = <GoTrophy className="w-5 h-5 text-yellow-700" />;
-    } else if (index === 1) {
-      col = "bg-gradient-to-r from-gray-400 via-gray-300 to-gray-200";
-      icon = <RiMedalFill className="w-5 h-5 text-gray-700" />;
-    } else if (index === 2) {
-      col = "bg-gradient-to-r from-orange-400 via-orange-300 to-orange-200";
-      icon = <RiMedalFill className="w-5 h-5 text-orange-700" />;
-    } else {
-      col = "bg-[rgba(255,255,255,0.5)] hover:bg-[rgba(255,255,255,0.7)]";
-    }
-    return (
-      <div
-        key={index}
-        className={`${col} rounded-md shadow-md transition-transform duration-300 ease-in-out transform hover:scale-105 backdrop-blur-sm`}
-      >
-        <div className="h-12 flex items-center justify-between px-4">
-          <p className="text-center text-black flex items-center justify-center gap-2 text-lg font-semibold">
-            <PiMedal className="w-6 h-6 text-gray-500" /> #{index + 1}
-          </p>
-          <p className="text-center text-black text-lg font-medium">
-            {item.name}
-          </p>
-          <div className="text-center text-black flex items-center justify-center gap-2 text-lg font-medium">
-            {icon}
-            <p>{item.points} pts</p>
+  // Generate leaderboard display
+  const displayer = players
+    .sort((a, b) => b.points - a.points) // Sort by points descending
+    .map((item, index) => {
+      let col = "";
+      let icon = <div className="w-5 h-5" />;
+      if (index === 0) {
+        col = "bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200";
+        icon = <GoTrophy className="w-5 h-5 text-yellow-700" />;
+      } else if (index === 1) {
+        col = "bg-gradient-to-r from-gray-400 via-gray-300 to-gray-200";
+        icon = <RiMedalFill className="w-5 h-5 text-gray-700" />;
+      } else if (index === 2) {
+        col = "bg-gradient-to-r from-orange-400 via-orange-300 to-orange-200";
+        icon = <RiMedalFill className="w-5 h-5 text-orange-700" />;
+      } else {
+        col = "bg-[rgba(255,255,255,0.5)] hover:bg-[rgba(255,255,255,0.7)]";
+      }
+      return (
+        <div
+          key={index}
+          className={`${col} rounded-md shadow-md transition-transform duration-300 ease-in-out transform hover:scale-105 backdrop-blur-sm`}
+        >
+          <div className="h-12 flex items-center justify-between px-4">
+            <p className="text-center text-black flex items-center justify-center gap-2 text-lg font-semibold">
+              <PiMedal className="w-6 h-6 text-gray-500" /> #{index + 1}
+            </p>
+            <p className="text-center text-black text-lg font-medium">
+              {item.name}
+            </p>
+            <div className="text-center text-black flex items-center justify-center gap-2 text-lg font-medium">
+              {icon}
+              <p>{item.points} pts</p>
+            </div>
           </div>
         </div>
-      </div>
-    );
-  });
+      );
+    });
 
   return (
     <>

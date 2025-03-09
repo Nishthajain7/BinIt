@@ -1,21 +1,43 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { IoMdClose } from "react-icons/io";
-
+import { getAuth } from "firebase/auth";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { db } from "../app/firebase";
 
 function SubmitPopup({ onClose , desc , type }) {
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [file, setFile] = useState(null);
 
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+
+
+  const updateUserPoints = async () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (user) {
+      const uid = user.uid;
+      const userRef = doc(db, "Users", uid);
+
+      try {
+        const userDoc = await getDoc(userRef);
+        if (userDoc.exists()) {
+          // Add 20 points to the current points
+          const newPoints = (userDoc.data().points || 0) + 20;
+          await updateDoc(userRef, { points: newPoints });
+          console.log('Points updated successfully.');
+        } else {
+          console.log('User document not found!');
+        }
+      } catch (error) {
+        console.error('Error updating points:', error);
+      }
+    } else {
+      console.log('No user is signed in.');
+    }
   };
 
-  const handleRemoveFile = () => {
-    setFile(null);
-    document.getElementById('fileUpload').value = ''; // Reset input field
-  };
+
+
+
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-lg z-50">
@@ -59,9 +81,11 @@ function SubmitPopup({ onClose , desc , type }) {
   
         {/* Cleaned Up Button */}
         <button
-          onClick={() => console.log('Cleaned up!')}
-          className="mt-6 bg-green-500 text-white px-6 py-3 rounded-xl hover:bg-green-600 transition-all duration-300"
-        >
+          onClick={() => {
+            console.log('Cleaned up!');
+            updateUserPoints();
+          }}
+          className="mt-6 bg-green-500 text-white px-6 py-3 rounded-xl hover:bg-green-600 transition-all duration-300">
           Cleaned Up
         </button>
       </div>

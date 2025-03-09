@@ -7,7 +7,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { FaArrowRight } from "react-icons/fa";
 import { useSearchParams } from 'next/navigation';
-
+import {Header} from '../../components/Header';
 const MapComponent = () => {
 
     const [search, setSearch] = useState('');
@@ -137,8 +137,6 @@ const MapComponent = () => {
             {/* Container for heading */}
             <div className="absolute top-5 left-1/2 transform -translate-x-1/2 flex items-center space-x-4 text-3xl font-bold text-black">
                 <h1 className="text-5xl">BinIt</h1>
-                <span className="text-black">|</span>
-                <h1>Username</h1>
             </div>
 
             <p className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-transparent bg-opacity-100 backdrop-blur-md p-6 rounded-2xl shadow-lg w-full max-w-md text-black">
