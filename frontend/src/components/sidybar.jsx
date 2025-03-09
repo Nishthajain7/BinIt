@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { IoMdClose } from "react-icons/io";
 
 
-function SubmitPopup({ onClose , desc }) {
+function SubmitPopup({ onClose , desc , type }) {
   const [selectedColor, setSelectedColor] = useState(null);
   const [file, setFile] = useState(null);
 
@@ -18,77 +18,57 @@ function SubmitPopup({ onClose , desc }) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-end bg-transparent bg-opacity-10 backdrop-blur-lg z-1000">
-    <div className="relative w-96 bg-white rounded-3xl p-8 shadow-2xl flex flex-col items-center border border-gray-300 h-full">
-<img className="rounded-3xl" src="https://static.vecteezy.com/system/resources/previews/008/086/278/non_2x/plastic-trash-bin-bags-of-garbage-on-the-pavement-in-park-clean-environment-concept-free-photo.jpg"></img>
-
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-lg z-50">
+      <div className="relative w-96 bg-white rounded-3xl p-8 shadow-2xl flex flex-col items-center border border-gray-300">
+        
+        {/* Image Section */}
+        <img
+          className="rounded-2xl w-full object-cover h-48"
+          src="https://static.vecteezy.com/system/resources/previews/008/086/278/non_2x/plastic-trash-bin-bags-of-garbage-on-the-pavement-in-park-clean-environment-concept-free-photo.jpg"
+          alt="Garbage on pavement"
+        />
+        
+        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 rounded-full text-gray-700 bg-gray-200 hover:bg-red-500 hover:text-white transition-all duration-300"
         >
           <IoMdClose size={24} />
         </button>
-
-        <p className="text-center text-bold font-bold text-green-900 text-l mt-3 px-4">
-            {desc}
+  
+        {/* Type Section with Dynamic Styling */}
+        <span
+          className={`px-4 py-2 rounded-full text-white text-sm font-semibold mt-4 ${
+            type === "yellow" ? "bg-yellow-500" :
+            type === "red" ? "bg-red-500" :
+            type === "green" ? "bg-green-500" :
+            "bg-gray-300"
+          }`}
+        >
+          {type === "yellow" ? "Organic" :
+           type === "red" ? "Hazardous" :
+           type === "green" ? "Recyclable" :
+           "Unknown"}
+        </span>
+  
+        {/* Description Section */}
+        <h2 className="text-lg font-medium text-gray-800 mt-4">Description:</h2>
+        <p className="text-center font-medium text-green-800 text-md mt-2 px-4">
+          {desc}
         </p>
-
-        <div className="mt-6 text-gray-700 text-center space-y-4">
-          {/* {[
-            { color: 'red', label: 'Hazardous Waste' },
-            { color: 'yellow', label: 'Organic Waste' },
-            { color: 'green', label: 'Recyclable Waste' },
-          ].map(({ color, label }) => (
-            <div
-              key={color}
-              onClick={() => setSelectedColor(color)}
-              className={`flex items-center space-x-3 cursor-pointer transition-all border-4 p-2 rounded-lg w-full justify-center ${
-                selectedColor === color ? 'border-black' : 'border-transparent'
-              }`}
-            >
-              <div className={`w-8 h-8 rounded-full`} style={{ backgroundColor: color }}></div>
-              <span className="text-gray-700 font-medium">{label}</span>
-            </div>
-          ))} */}
-        </div>
-
-        <form className="w-full mt-6 space-y-4">
-          <label className="text-green-700 text-sm font-bold">Upload Image</label>
-          <div className="flex items-center bg-gray-100 rounded-lg p-2 shadow-md w-full">
-            <input type="file" id="fileUpload" className="hidden" onChange={handleFileChange} />
-            <label
-              htmlFor="fileUpload"
-              className="cursor-pointer bg-green-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-700 transition-all"
-            >
-              Choose File
-            </label>
-
-            {file && (
-              <div className="flex items-center ml-2 bg-white px-2 py-1 rounded-lg shadow-sm">
-                <span className="text-gray-700 text-sm truncate max-w-[150px]">{file.name}</span>
-                <button onClick={handleRemoveFile} className="ml-2 text-red-500 hover:text-red-700">
-                  <IoMdClose size={16} />
-                </button>
-              </div>
-            )}
-          </div>
-
-          {file && (
-            <div className="mt-4">
-              <img src={URL.createObjectURL(file)} alt="Uploaded File" className="w-full h-auto rounded-lg shadow-md" />
-            </div>
-          )}
-
-          <button
-            type="submit"
-            className="w-full rounded-lg bg-green-700 px-5 py-3 text-xl font-medium text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl active:bg-green-600"
-          >
-            Submit
-          </button>
-        </form>
+  
+        {/* Cleaned Up Button */}
+        <button
+          onClick={() => console.log('Cleaned up!')}
+          className="mt-6 bg-green-500 text-white px-6 py-3 rounded-xl hover:bg-green-600 transition-all duration-300"
+        >
+          Cleaned Up
+        </button>
       </div>
     </div>
   );
+  
+  
 }
 
 export default SubmitPopup;

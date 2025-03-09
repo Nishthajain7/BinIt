@@ -10,6 +10,7 @@ import Popup from '../../../components/popup';
 import SubmitPopup from '../../../components/sidybar';
 import { db } from "../../firebase"; // Adjust the path
 import { doc, updateDoc, arrayUnion, GeoPoint, setDoc, getDoc } from "firebase/firestore";
+import { desc } from "framer-motion/client";
 
 const MapComponent = ({ params }) => {
     const [place, setPlace] = useState(params.id !== "current" ? params.id : "");
@@ -45,6 +46,9 @@ const MapComponent = ({ params }) => {
         }
     }, [params]);
 
+
+
+
     function showPosition(position) {
         let x = position.coords.latitude;
         let y = position.coords.longitude;
@@ -74,6 +78,9 @@ const MapComponent = ({ params }) => {
             mapRef.current.setView([lat, lng], 15);
         }
     }
+
+
+
 
     function addMarker(e) {
         const latlng = e.latlng; // Ensure latlng is properly defined
@@ -134,11 +141,15 @@ const MapComponent = ({ params }) => {
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 console.log("Document data:", data);
-                if (data.all) {
-                    const allMarkers = data.all;
+                if (data.all && data.desc && data.type) {
+                    const allMarkers = data.all.map((geoPoint, index) => ({
+                        point: geoPoint,
+                        desc: data.desc[index],
+                        type: data.type[index],
+                    }));
                     return allMarkers;
                 } else {
-                    console.log("'all' array not found in the document!");
+                    console.log("One or more fields ('all', 'desc', 'type') are missing in the document!");
                     return [];
                 }
             } else {
@@ -150,24 +161,27 @@ const MapComponent = ({ params }) => {
             return [];
         }
     }
+    
 
     async function loadMarkers() {
         const geoPoints = await getdata();
 
         if (geoPoints && mapRef.current) {
-            geoPoints.forEach((geoPoint) => {
-                const lat = geoPoint.latitude;
-                const lng = geoPoint.longitude;
+            geoPoints.forEach(({ point, desc, type }) => {
+                const lat = point.latitude;
+                const lng = point.longitude;
                 const customIcon = L.divIcon({
                     className: "custom-marker",
                     html: `<div class="bg-red-500 text-white font-bold text-xs flex items-center justify-center w-8 h-8 rounded-full shadow-lg border-2 border-white">📍</div>`,
                     iconSize: [32, 32],
                     iconAnchor: [16, 32],
-                    popupAnchor: [0, -32]
+                    popupAnchor: [0, -32],
                 });
                 const marker = L.marker([lat, lng], { icon: customIcon }).addTo(mapRef.current);
                 marker.on('click', () => {
-                    setdescOpen(true);
+                    SetDesc(desc); // Set description
+                    SetType(type); // Set type
+                    setdescOpen(true); // Open description popup
                 });
                 markersRef.current.push(marker);
             });
@@ -273,8 +287,13 @@ const MapComponent = ({ params }) => {
                 />
             )}
             {descOpen && (
-            <SubmitPopup onClose={() => setdescOpen(false)}/>
-        )}
+                <SubmitPopup
+                    onClose={() => setdescOpen(false)}
+                    desc={setdesc} // Pass only the description value
+                    type={settype} // Pass only the type value
+                />
+            )}
+
         </div>
     );
 };
