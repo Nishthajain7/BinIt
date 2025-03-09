@@ -3,7 +3,7 @@
 [![Project Demo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
 
 ### Live Project
-[BinIt](https://your-project-url.com)
+[BinIt](https://youtu.be/47fBzHXPXys)
 
 ## Technical Implementation
 
