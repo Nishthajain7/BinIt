@@ -1,6 +1,6 @@
 
 ### Demo
-[![Project Demo]([https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID](https://your-project-url.com))
+[![Project Demo]([https://www.youtube.com/watch?v=VIDEO_ID]https://youtu.be/47fBzHXPXys)
 
 ### Live Project
 [BinIt](https://youtu.be/47fBzHXPXys)
