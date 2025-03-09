@@ -21,12 +21,12 @@ const Header: React.FC = () => {
             <Container className="!px-0">
                 <nav className="shadow-md md:shadow-none bg-white md:bg-transparent mx-auto flex justify-between items-center py-2 px-5 md:py-10">
                     {/* Logo */}
-                    <Link href="/" className="flex bg-white rounded-full p-6 items-center gap-2">
+                    <Link href="/" className="flex bg-white rounded-full py-1 px-6 items-center gap-2">
                         <Image
                             src="/images/logo.png"
                             alt="Logo"
-                            width={20}
-                            height={20}
+                            width={50}
+                            height={50}
                             className="text-foreground"
                         />
                         <span className="manrope text-2xl font-semibold text-foreground cursor-pointer">
@@ -37,13 +37,13 @@ const Header: React.FC = () => {
                     {/* Desktop Menu */}
                     <ul className="hidden md:flex bg-white rounded-full p-6">
                         <li>
-                            <Link href="/auth" className="text-black py-3 px-3 rounded-full transition-colors">
+                            <Link href="/auth" className="text-black py-3 px-3 rounded-full hover:text-blue-600 hover:font-bold">
                                 Get Started
                             </Link>
-                            <Link href="/leaderboard" className="text-black py-3 px-3 rounded-full transition-colors">
+                            <Link href="/leaderboard" className="text-black py-3 px-3 rounded-full hover:text-blue-600 hover:font-bold">
                                 Leaderboard
                             </Link>
-                            <Link href="/auth" className="text-black py-3 px-3 rounded-full transition-colors">
+                            <Link href="/auth" className="text-black py-3 px-3 rounded-full hover:text-blue-600 hover:font-bold">
                                 Dashboard
                             </Link>
                         </li>
