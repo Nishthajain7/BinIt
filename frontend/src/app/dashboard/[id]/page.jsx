@@ -7,6 +7,7 @@ import 'leaflet.markercluster/dist/leaflet.markercluster.js';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import Popup from '../../../components/popup';
+import SubmitPopup from '../../../components/sidybar';
 import { db } from "../../firebase"; // Adjust the path
 import { doc, updateDoc, arrayUnion, GeoPoint, setDoc, getDoc } from "firebase/firestore";
 
@@ -15,6 +16,11 @@ const MapComponent = ({ params }) => {
     const [searchTimeout, setSearchTimeout] = useState(null);
     const [marker, setMarker] = useState(null);
     const [selectedMarker, setSelectedMarker] = useState(null);
+
+    const [setdesc, SetDesc] = useState("");
+    const [settype, SetType] = useState("");
+
+    const [descOpen, setdescOpen] = useState(false);
     const [popupOpen, setPopupOpen] = useState(false);
     const mapRef = useRef(null);
     const markersRef = useRef([]);
@@ -94,9 +100,7 @@ const MapComponent = ({ params }) => {
 
     function storedata(latlng, desc,col) {
         console.log("Storing marker:", latlng, "with descriptions:", desc);
-    
         const markerRef = doc(db, "Markers", "all");
-    
         // Try to update both fields (`all` and `desc`) together
         updateDoc(markerRef, {
             all: arrayUnion(new GeoPoint(latlng.lat, latlng.lng)), // Append GeoPoint
@@ -162,6 +166,9 @@ const MapComponent = ({ params }) => {
                     popupAnchor: [0, -32]
                 });
                 const marker = L.marker([lat, lng], { icon: customIcon }).addTo(mapRef.current);
+                marker.on('click', () => {
+                    setdescOpen(true);
+                });
                 markersRef.current.push(marker);
             });
         }
@@ -265,6 +272,9 @@ const MapComponent = ({ params }) => {
                     }}
                 />
             )}
+            {descOpen && (
+            <SubmitPopup onClose={() => setdescOpen(false)}/>
+        )}
         </div>
     );
 };
