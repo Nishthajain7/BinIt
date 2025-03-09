@@ -132,7 +132,6 @@ const MapComponent = () => {
 
     return (
         <div className="relative w-full h-screen">
-            <Header/>
             <div className="absolute inset-0" id="map"></div>
 
             {/* Container for heading */}
