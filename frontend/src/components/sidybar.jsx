@@ -1,13 +1,23 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { IoMdClose } from "react-icons/io";
 import { getAuth } from "firebase/auth";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../app/firebase";
 
 function SubmitPopup({ onClose , desc , type }) {
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [file, setFile] = useState(null);
 
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const handleRemoveFile = () => {
+    setFile(null);
+    document.getElementById('fileUpload').value = ''; // Reset input field
+  };
 
 
   const updateUserPoints = async () => {

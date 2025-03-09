@@ -18,8 +18,10 @@ const MapComponent = ({ params }) => {
     const [searchTimeout, setSearchTimeout] = useState(null);
     const [marker, setMarker] = useState(null);
     const [selectedMarker, setSelectedMarker] = useState(null);
+    
 
     const [setdesc, SetDesc] = useState("");
+    const [setimg, SetImg] = useState("");
     const [settype, SetType] = useState("");
 
     const [descOpen, setdescOpen] = useState(false);
@@ -306,7 +308,7 @@ const MapComponent = ({ params }) => {
                     onClose={() => setPopupOpen(false)}
                     onsubmit={(desc,col) => {
                         if (marker) {
-                            storedata(marker,desc,col,img);
+                            storedata(marker,desc,col);
                             setPopupOpen(false);
                         }
                     }}

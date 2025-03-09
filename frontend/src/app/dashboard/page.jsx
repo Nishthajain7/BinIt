@@ -7,7 +7,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { FaArrowRight } from "react-icons/fa";
 import { useSearchParams } from 'next/navigation';
-import {Header} from '../../components/Header';
+
 const MapComponent = () => {
 
     const [search, setSearch] = useState('');
@@ -132,6 +132,7 @@ const MapComponent = () => {
 
     return (
         <div className="relative w-full h-screen">
+            <Header/>
             <div className="absolute inset-0" id="map"></div>
 
             {/* Container for heading */}
