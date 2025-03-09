@@ -40,7 +40,6 @@ cd Eureka/frontent
 ## 2. Installation 
 
 ```bash
-cd frontend
 npm install
 ```
 
