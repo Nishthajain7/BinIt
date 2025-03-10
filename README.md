@@ -1,8 +1,16 @@
+## Winning Project🏆
+- **Theme** : Sustainability
 
-### Demo  
+## Contributers
+- [Aadarsh Mahesh K](https://github.com/AadarshM07)
+- [Rohith Pradeep](https://github.com/Pinjinx)
+- [Nandu Krishna](https://github.com/Iron56)
+- [Nishtha jain](https://github.com/Nishthajain7)
+
+## Demo  
 [![Project Demo](https://img.youtube.com/vi/47fBzHXPXys/0.jpg)](https://youtu.be/47fBzHXPXys)  
 
-### Live Project
+## Live Project
 [BinIt](https://youtu.be/47fBzHXPXys)
 
 ## Technical Implementation
