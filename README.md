@@ -8,7 +8,7 @@
 ## Technical Implementation
 
 ### Technologies Used
-- **Frontend**: Nextjs, Tailwind CSS
+- **Frontend**: Nextjs, Tailwind CSS , Leafletjs
 - **Backend**: Firebase Authentication
 - **Database**: Firebase
 - **APIs**: Open Street Map
