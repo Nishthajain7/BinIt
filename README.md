@@ -4,7 +4,7 @@
 ## Contributers
 - [Aadarsh Mahesh K](https://github.com/AadarshM07)
 - [Rohith Pradeep](https://github.com/Pinjinx)
-- [Nandu Krishna](https://github.com/Iron56)
+- [Nandu Krishna](https://github.com/Iron-56)
 - [Nishtha jain](https://github.com/Nishthajain7)
 
 ## Demo  
